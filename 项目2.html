@@ -1,0 +1,58 @@
+<html> 
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<script type="text/javascript" src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+	<script type="text/javascript">
+Function.prototype.before=function(func){
+	var self=this;
+		return function(){
+		if(func.apply(this,arguments)===false)
+		{	
+			return false;
+		}
+		return self.apply(this,arguments);	
+		}
+ 
+ }; 
+		Function.prototype.after=function(func){
+		var self=this;
+		return function(){
+		var te=self.apply(this,arguments);
+		if(te===false)
+		{	
+			return false;
+		}
+		func.apply(this,arguments);
+		return te;
+		}
+ 
+ }; 
+ function doCircle(times){// 事件函数，指定次数的循环
+ 
+        var total = 0; 
+        for(var i=1;i<=times;i++){ 
+            total += times; 
+        } 
+                
+    } 
+  $(document).ready(function(){ 
+	var beforetime;
+	doCircle=doCircle.before(function(){//设置切点
+	beforetime = new Date().getTime();// 记录当前时间
+	}).after(function(){
+	$("#spanMilliSeconds").text((new Date().getTime() - beforetime) + " ms");// 得到执行时间
+        }); 
+    }); 
+</script>
+</head> 
+<body> 
+number of cycles：<br /> 
+    <input id="txttimes" type="text" value="1000000" /> 
+    <button id="btnTest" onClick="doCircle($('#txttimes').attr('value'))">
+    Test</button> 
+    
+    <span id="spanMilliSeconds"></span> 
+</body> 
+ 
+
+</html>

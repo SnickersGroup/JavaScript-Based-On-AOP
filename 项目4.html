@@ -1,0 +1,45 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>测试页面</title>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+<script>
+			var getflash=function()//触发flash事件
+			{	
+				alert("flash");
+			}
+			var getform=function()//触发form事件
+			{
+				alert("form");
+			}
+			var gethtml5=function()//触发html5事件
+			{
+				alert("html5");
+			}
+			var getplugin=function()//触发plugin事件
+			{
+				alert("plugin");
+			}
+			Function.prototype.after=function(func){//advice:after
+				var self=this;
+				return function(){
+					var te=self.apply(this,arguments);
+					if(te===false)
+					{	
+						return false;
+					}
+					func.apply(this,arguments);
+					return te;
+				}
+			}; 
+		var obj=getflash.after(getform).after(getplugin).after(gethtml5);//事件的执行职责链
+</script>
+</head>
+	
+<body>
+	<input type="button" value="执行某项目" onclick="obj()")>
+</body>
+
+
+
+</html>

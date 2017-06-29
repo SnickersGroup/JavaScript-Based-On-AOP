@@ -1,0 +1,100 @@
+<html>
+<title>project three</title>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body>
+<h1>分离表单请求和检验表单提交内容合法性</h1>
+<div>
+<p>I believe I can make it!</p>
+
+<form method="POST" id="formid" accept-charset="UTF-8" onsubmit="return send()">
+<br>请输入：</br>
+<input type="text" id="1" name="text1" value=""><!--用数字命名text的id-->
+<br>请输入again：</br>
+<input type="text" id="2" name="text2" value="">
+<br>请输入again and again：</br>
+<input type="text" id="3" name="text3" value="">
+</br></br>
+<input type="submit" name="first">
+</form>
+</div>
+</body>
+</html>
+
+<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>  
+<script>
+
+Function.prototype.before = function(func){//before函数
+    var _self = this;
+	console.log(_self);
+	return function(){
+	    if(func.apply( this, arguments ) === false)
+		{
+		    alert("We decide to cencle the submittion!");
+		    return false;
+		}
+		return _self.apply( this, arguments );
+	}
+}
+
+var validate_states = {
+    //这里可以加多个属性来作为各种输入合法性的判断条件
+	
+	//条件一：判断value是否为空
+    not_empty: function(value){
+		console.log("length = " +value.length);
+		value = value.replace('\s+', '');//将value中的空格全部转换为空字符串
+	    return value.length != 0;
+	}
+}
+
+var validate = function(value){//每个value传到这里进行合法性检验
+	console.log("validate's value = "+value);
+    for( var i in validate_states ){//循环检验是否符合多种合法性条件，只要有一条不符合就会返回false
+	    if(validate_states[i].apply( this, arguments ) === false){
+		    //alert("there you are");
+		    return false;
+		}
+	}
+	return true;
+}
+
+var send = function(value)
+{
+	alert("input correct,arrive SEND!");
+	form.send();//检验合格后将表单内容提交
+}
+
+send=send.before(function()
+{
+    <!-- var k=0; -->
+    <!-- var inputs = document.getElementByTagName("input"); -->
+	<!-- for(var j=0; j<inputs.length; j++) -->
+	<!-- { -->
+	    <!-- if(inputs[j].type == "text") -->
+		    <!-- //alert(inputs[j].value); -->
+			<!-- alert(j); -->
+	<!-- } -->
+
+	<!-- $(document).ready(function(){ -->
+	    <!-- $(":text").each(function(){ -->
+			<!-- alert($(this).attr("value")); -->
+			<!-- var val = $(this).attr("value"); -->
+			<!-- if( validate(val)===false ){ -->
+		        <!-- return false; -->
+		    <!-- } -->
+		<!-- }); -->
+	<!-- }); -->
+	
+    var value = null;
+	//根据id找到form表单中的所有text类型的输入框，检验每个输入框的内容是否为空
+	for(var i=1; document.getElementById(i); i++){
+        value = document.getElementById(i).value;//将输入框内的内容赋值给变量value
+	    console.log(value);//监控
+		if( validate(value)===false ){//检验输入框的内容（value）是否为空
+		    return false;
+		}
+	}
+    return true;
+});
+
+</script>
